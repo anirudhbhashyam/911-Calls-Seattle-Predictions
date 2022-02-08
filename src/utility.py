@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import List
 
-def lossy_error(predictions: np.array, labels: np.array, tolerance: float = 2) -> float:
+def mae_lossy_error(predictions: np.array, labels: np.array, tolerance: float = 2) -> float:
 	"""
 	Compares the `predictions` and `labels` with a `tolerance.`
 	
