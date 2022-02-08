@@ -32,6 +32,7 @@ def test_nn() -> None:
 	Provides testing data for the trained neural network.
 	"""
 	print("Testing nn model against test data set.")
+ 
 	try:
 		model = tf.keras.models.load_model(os.path.join(NN_MODEL_SAVE_PATH, NN_MODEL_SAVE_NAME))
 	except FileNotFoundError:

@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from typing import List
+from typing import List, Iterable
 
-def mae_lossy_error(predictions: np.array, labels: np.array, tolerance: float = 2) -> float:
+def count_lossy_error(predictions: Iterable, labels: Iterable, tolerance: float = 2) -> float:
 	"""
 	Compares the `predictions` and `labels` with a `tolerance.`
 	
@@ -27,10 +27,10 @@ def mae_lossy_error(predictions: np.array, labels: np.array, tolerance: float = 
 	AttributeError:
 		If predictions and labels are not of the same length.
 	"""
-	if predictions.shape[0] != labels.shape[0]:
+	if len(predictions) != len(labels):
 		raise AttributeError(f"The shapes of prediction and labels should match in dim 0.")
 	
-	return sum(1 for pred, label in zip(predictions, labels) if abs(pred - label) <= tolerance) / len(predictions)
+	return sum(1 for pred, label in zip(predictions, labels) if abs(pred - label) >= tolerance) / len(predictions)
 
 def scale(data: pd.DataFrame, cols: List[str] = None, type: str = "mean") -> pd.DataFrame:
 	"""
