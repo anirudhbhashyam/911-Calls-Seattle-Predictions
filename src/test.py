@@ -47,11 +47,11 @@ def test_nn() -> None:
  
 	predictions = model.predict(
 	np.array(test_data).reshape(-1, WB_SIZE, N_FEATURES)
-	)
+	).flatten()
 	# predictions = np.argmax(predictions, axis = 1)
  
 	test_compare = pd.DataFrame(
-    	np.vstack([predictions.flatten(), Y_test.to_numpy()]).T, 
+    	np.vstack([predictions, Y_test.to_numpy()]).T, 
         columns = ["Predictions", "Real"])
  
 	# Backtest plot.
@@ -64,7 +64,8 @@ def test_nn() -> None:
 	plt.legend(["Predicted Call Volume", "Real Call Volume"])
 	plt.savefig(os.path.join(TEST_FIG_SAVE_PATH, ".".join(["nn_backtest_fig", FIG_EXT])), dpi = 160)
 	
-	print(f"Mean absolute test error (nn): {mean_absolute_percentage_error(Y_test, predictions.flatten()):.2f}")
+	print(f"Mean absolute test error (nn): {mean_absolute_percentage_error(Y_test, predictions):.2f}")
+	print(f"Accuracy (nn): {(1 - ut.count_lossy_error(np.floor(predictions), Y_test, 5)) * 100:.2f} \u00b1 {5.0}")
  
  
 def test_gb() -> None:

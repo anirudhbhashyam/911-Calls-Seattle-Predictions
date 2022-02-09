@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # In[53]:
-
 
 import os
 
@@ -17,7 +13,7 @@ print("Setup complete.")
 # In[54]:
 
 
-path = os.path.abspath("./train-test")
+path = os.path.abspath("./raw")
 file = "raw_reduced_7_years"
 ext = "csv"
 
@@ -32,7 +28,9 @@ print("Raw data loaded.")
 raw_data["Date"] = pd.to_datetime(raw_data["Date"])
 raw_data["Time"] = pd.to_datetime(raw_data["Time"], format = "%H:%M:%S")
 raw_data["day_of_year"] = raw_data["Date"].dt.day_of_year
-raw_data["hour"] = raw_data["Time"].dt.hour 
+raw_data["hour"] = raw_data["Time"].dt.hour
+print("Converted datetime features to correct format.")
+print("Added day_of_year and hour as features.") 
 
 
 # In[57]:
@@ -43,10 +41,9 @@ columns_to_drop = ["Incident_Number", "Report_Location", "Address", "Type"]
 data = raw_data.drop(columns = columns_to_drop)
 data = data.sort_values(by = "Date")
 # data[["Time", "Date"]] = data[["Time", "Date"]].isna()
-
+print(f"Dropped columns: {columns_to_drop}")
 
 # In[58]:
-
 
 action = "impute"
 
@@ -63,12 +60,9 @@ elif action == "mean replace":
 	data_filled = data.fillna(data.mean())
 else:
 	print("Select specific action.")
+
+print(f"Handled missing values using {action}.")
 	
-
-
-# In[59]:
-
-
 def origin_haversine(coord: tuple, degrees = True) -> float:
     """
     Calculates the Haversine the point `(latitude, longitude)` and `(0, 0)`.
@@ -103,8 +97,9 @@ def origin_haversine(coord: tuple, degrees = True) -> float:
 HAVERSINE_FEATURE = False
 
 if HAVERSINE_FEATURE:
-    data["latlong_combined"] = [origin_haversine((lat, lng)) for lat, lng in zip(data.Latitude, data.Longitude)]
-    data_haversine = data.drop(columns = ["Latitude", "Longitude"])
+	print("Added Haversine distance as feature.")
+	data["latlong_combined"] = [origin_haversine((lat, lng)) for lat, lng in zip(data.Latitude, data.Longitude)]
+	data_haversine = data.drop(columns = ["Latitude", "Longitude"])
 
 
 # In[71]:
@@ -145,17 +140,15 @@ def create_main_data(data: pd.DataFrame, date: str, time_groups: list):
 
 
 # In[72]:
-
-
 main_frames = create_main_data(data, "Date", ["day_of_year", "hour"])
-
+print("Created yearly data frames.")
 
 # In[73]:
 
 
 final_data_mean = pd.concat(main_frames[::-1], ignore_index = True)
 final_data_test_mean = main_frames[-1]
-
+print("Created raw train and test data.")
 
 # In[74]:
 
@@ -163,4 +156,5 @@ final_data_test_mean = main_frames[-1]
 path_to_save = os.path.relpath("./train-test")
 final_data_mean.to_csv(os.path.join(path_to_save, ".".join(["data_yearly_hourly_train", "csv"])), index = False)
 final_data_test_mean.to_csv(os.path.join(path_to_save, ".".join(["data_yearly_hourly_test", "csv"])), index = False)
+print(f"Saved raw train and test data to {path_to_save}.")
 

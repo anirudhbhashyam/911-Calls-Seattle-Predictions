@@ -136,7 +136,7 @@ def train(model: tf.keras.Model,
 
 def train_stats(history_df: pd.DataFrame) -> None:
 	"""
-	Produces training statistics once it training has run its course.
+	Produces training statistics once training has run its course.
 	
 	Parameters
 	----------
