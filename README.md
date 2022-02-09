@@ -15,6 +15,14 @@ Detailed environment information can be found in `requirements.txt`.
 # Data 
 Data was procured from [source](https://data.seattle.gov/Public-Safety/Seattle-Real-Time-Fire-911-Calls/kzjm-xkqj). It was handled initially with `SQL`. Using `SQL`, the number of records was reduced to the last 7 years and the *Datetime* was split into *Date* and *Time*. Subsequently `pandas` was used to clean and transform the data. `clean.ipynb` details how the data was cleaned, calls extracted and  prepared for transformation. `transform.ipynb` scales the data and adds new features based on the old features.
 
+To run the notebooks, the data must be downloaded from the *source*, the preprocessing directory can be used to query the data to create the reduced data file like so 
+```
+cd data
+mkdir raw
+```
+query data using preprocessing files
+Save queried data to raw as `raw_reduced_7_year.csv` 
+
 # Running The Model
 ```
 git clone --recursive https://github.com/anirudhbhashyam/911-Calls-Seattle-Predictions
