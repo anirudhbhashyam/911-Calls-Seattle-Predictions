@@ -18,10 +18,12 @@ train_data = pd.read_csv(os.path.join(DATA_PATH, ".".join([DATA_TRAIN, DATA_EXT]
 # Get the labels.
 Y = train_data.pop(LABEL)
 
-sample_weights = np.ones(Y.shape[0])
-for i in range(10, 24):
-	sample_weights[train_data["_".join(("hour", str(i)))] == 1] = 1.5
- 
+# sample_weights = np.ones(Y.shape[0])
+# for i in range(10, 24):
+# 	sample_weights[train_data["_".join(("hour", str(i)))] == 1] = 1.5
+
+
+#  -- For classification -- #
 # CLASSES = np.unique(Y)
 # N_CLASSES = len(CLASSES)
 # Y = Y.replace(dict(zip(CLASSES, range(0, len(CLASSES)))))
@@ -62,7 +64,7 @@ def build_and_compile(input_: tuple = (WB_SIZE, N_FEATURES)
 		tf.keras.layers.LSTM(50, return_sequences = False),
 		tf.keras.layers.GaussianNoise(0.5),
 		tf.keras.layers.Dense(512),
-		# tf.keras.layers.Dropout(0.7),
+		tf.keras.layers.Dropout(0.7),
 		tf.keras.layers.Dense(128),
 		tf.keras.layers.Dropout(0.5),
 		tf.keras.layers.Dense(64),
@@ -79,10 +81,10 @@ def build_and_compile(input_: tuple = (WB_SIZE, N_FEATURES)
 	return model
 
 def train(model: tf.keras.Model,
-		  train_data: pd.DataFrame = X_train,
-		  train_labels: pd.DataFrame = Y_train,
-		  val_data: pd.DataFrame = X_val,
-		  val_labels: pd.DataFrame = Y_val,
+		  train_data: pd.DataFrame,
+		  train_labels: pd.DataFrame,
+		  val_data: pd.DataFrame,
+		  val_labels: pd.DataFrame,
 		  epochs: int = 300,
 		  sample_weights: np.array = None,
 		  ) -> pd.DataFrame:
@@ -139,7 +141,7 @@ def train_stats(history_df: pd.DataFrame) -> None:
 	Parameters
 	----------
 	history_df :
-		The history as returned by the `train` method.
+		The history as returned by Keras `fit` method .
   
 	Returns
 	-------
@@ -164,13 +166,12 @@ def train_stats(history_df: pd.DataFrame) -> None:
 
 def main():
 	model = build_and_compile((WB_SIZE, N_FEATURES), "mae")
-	history_df = train(model)
+	history_df = train(model, X_train, Y_train, X_val, Y_val)
 	
 	train_stats(history_df)
  
 	# Save trained model (better to use checkpoints).
 	model.save(os.path.join(NN_MODEL_SAVE_PATH, NN_MODEL_SAVE_NAME))
-
 
 if __name__ == "__main__":
 	main()

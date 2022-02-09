@@ -1,3 +1,8 @@
+"""
+Utility
+=======
+"""
+
 import numpy as np
 import pandas as pd
 from typing import List, Iterable
@@ -28,7 +33,7 @@ def count_lossy_error(predictions: Iterable, labels: Iterable, tolerance: float 
 		If predictions and labels are not of the same length.
 	"""
 	if len(predictions) != len(labels):
-		raise AttributeError(f"The shapes of prediction and labels should match in dim 0.")
+		raise ValueError(f"The shapes of prediction and labels should match in dim 0.")
 	
 	return sum(1 for pred, label in zip(predictions, labels) if abs(pred - label) >= tolerance) / len(predictions)
 

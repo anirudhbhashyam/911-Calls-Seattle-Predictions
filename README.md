@@ -25,16 +25,25 @@ Pretrained models are saved in *models*. To train the neural netwok, one can do 
 
 ```
 python train_nn.py
+python train_gb.py
 ```
-Training will print trainining statistics and save the learning curve to `./plots/training`.
+Training will print training statistics and save the learning curve to `./plots/training`.
 
 ## Testing
 Trained models that are saved in *./models* are automatically loaded and tested when 
 ```
 python test.py
 ```
-is called. Testing prints testing statistics and saves backtest plots to `./plots/testing`. 
+is called. Testing prints testing statistics and saves backtest plots to `./plots/testing`. Testing with the sklearn model is not possible on a pretrained model.
+
 
 # Documentation
-The documentation is built using sphinx but is not published yet. 
+The documentation is built using sphinx but is not published yet. Current version can be used in `/docs/_build/html/index.html`.
 
+# Improvements
+* OOP approach with TensorFlow network. This will allow more flexibility in the architecture and functionality in the network (for example classification can be done).
+* Testing the network using cross validation and more hyperparameters.
+* Hyperparameter estimation in scikit-learn estimator.
+* Better documentation.
+* Add unittests for network and other functions.
+* Rethink feature space in the dataset. 

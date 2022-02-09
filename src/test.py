@@ -1,3 +1,8 @@
+"""
+Test
+====
+"""
+
 import os
 
 import pandas as pd
@@ -56,9 +61,46 @@ def test_nn() -> None:
 	plt.title("NN Backtest Plot")
 	plt.xlabel("Time")
 	plt.ylabel("Predictions")
+	plt.legend(["Predicted Call Volume", "Real Call Volume"])
 	plt.savefig(os.path.join(TEST_FIG_SAVE_PATH, ".".join(["nn_backtest_fig", FIG_EXT])), dpi = 160)
 	
 	print(f"Mean absolute test error (nn): {mean_absolute_percentage_error(Y_test, predictions.flatten()):.2f}")
+ 
+ 
+def test_gb() -> None:
+	"""
+	Provides testing data for the sk learn model.
+	"""
+	print("Testing sklearn model.")
+ 
+	try:
+		with open(os.path.join(SK_MODEL_SAVE_PATH, ".".join([SK_MODEL_SAVE_NAME, SK_MODEL_SAVE_EXT])), "rb") as f:
+			model = pickle.load(f)
+	except FileNotFoundError:
+		print(f"Loaded model not found in {NN_MODEL_SAVE_PATH}. Check name or save path in variables.py.")
+
+  
+	predictions = model.predict(
+		np.array(test_data)
+	)
+ 
+	test_compare = pd.DataFrame(
+    	np.vstack([predictions.flatten(), Y_test.to_numpy()]).T, 
+        columns = ["Predictions", "Real"])
+
+	# Backtest plot.
+	plt.figure(figsize = (16, 8))
+	sns.lineplot(data = test_compare, x = list(range(N_SAMPLES)), y = "Predictions")
+	sns.lineplot(data = test_compare, x = list(range(N_SAMPLES)), y = "Real")
+	plt.title("NN Backtest Plot")
+	plt.xlabel("Time")
+	plt.ylabel("Predictions")
+	plt.legend(loc = "upper left")
+	plt.savefig(os.path.join(TEST_FIG_SAVE_PATH, ".".join(["gb_backtest_fig", FIG_EXT])), dpi = 160)
+	
+	print(f"Mean absolute test error (nn): {mean_absolute_percentage_error(Y_test, predictions.flatten()):.2f}")
+	
+    
  
  
 def main():
