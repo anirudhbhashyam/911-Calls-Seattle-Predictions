@@ -20,8 +20,8 @@ To run the notebooks, the data must be downloaded from the *source*, the preproc
 cd data
 mkdir raw
 ```
-query data using preprocessing files
-Save queried data to raw as `raw_reduced_7_year.csv` 
+* query data using preprocessing files.
+* Save queried data to raw as `raw_reduced_7_year.csv`.
 
 # Running The Model
 ```
