@@ -39,13 +39,13 @@ def train() -> None:
 	#                         cv = cv, 
 	#                         verbose = 2,
 	#                         n_jobs = 4)
-	reg = GradientBoostingClassifier(n_estimators = 200, 
+	reg = GradientBoostingRegressor(n_estimators = 200, 
 	                                 random_state = 1299709,
 	                                 verbose = 1)
-	# reg.fit(X_train, Y_train)
 	scores = cross_val_score(reg, X_train, Y_train, cv = cv)
  
 	print(f"Average cross validation scores: {np.mean(scores)}\u00b1{np.std(scores)}")
+	reg.fit(X_train, Y_train)
 
 	with open(os.path.join(SK_MODEL_SAVE_PATH, ".".join([SK_MODEL_SAVE_NAME, SK_MODEL_SAVE_EXT])), "wb") as f:
 		pickle.dump(reg, f)
